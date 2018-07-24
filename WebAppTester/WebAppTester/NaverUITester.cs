@@ -7,6 +7,7 @@ using OpenQA.Selenium.Opera;
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading;
+using OpenQA.Selenium.Support.UI;
 
 namespace WebAppTester
 {
@@ -26,7 +27,7 @@ namespace WebAppTester
         public void SetupTest()
         {
             driver = new ChromeDriver();
-            Thread.Sleep(10000);
+            //Thread.Sleep(10000);
             //driver = new FirefoxDriver();
             //driver = new InternetExplorerDriver();
             //driver = new EdgeDriver();
@@ -76,6 +77,32 @@ namespace WebAppTester
 
 
             TestScreen.ScreenCapture(driver);
+
+
+            TimeSpan ts = new TimeSpan(0, 0, 60);
+            WebDriverWait wait = new WebDriverWait(driver, ts);
+
+            wait.Until(ExpectedConditions.ElementExists(By.ClassName("menu_my_blog")));
+
+
+            driver.FindElement(
+                By.XPath(@"//*[@id=""container""]/div/aside/div/div[1]/nav/a[2]")).Click();
+
+
+            var windows = driver.WindowHandles;
+            foreach (String window in windows)
+            {
+                driver.SwitchTo().Window(window);
+                if (driver.Title == "SmartEditor - editor")
+                {
+                    break;
+                }
+            }
+            
+            wait.Until(ExpectedConditions.ElementExists(By.ClassName("align_wrap")));
+            
+
+
 
         }
     }
